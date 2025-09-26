@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidDown - Video Downloader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎬 VidDown</h1>
+                </div>
+                <nav class="nav-menu">
+                    <button class="nav-btn active" data-tab="home">Home</button>
+                    <button class="nav-btn" data-tab="downloads">My Downloads</button>
+                    <button class="nav-btn" data-tab="settings">Settings</button>
+                    <button class="nav-btn premium-btn" data-tab="premium">Premium</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ad Banner Top -->
+    <div class="ad-banner top-ad">
+        <div class="ad-content">
+            <span class="ad-text">Get 50% off on Premium Subscription!</span>
+            <button class="ad-close" onclick="closeAd(this)">×</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Home Tab -->
+            <div id="home-tab" class="tab-content active">
+                <!-- URL Input Section -->
+                <section class="url-input-section">
+                    <div class="input-container">
+                        <input type="text" id="url-input" class="form-control url-input" placeholder="Video URL यहाँ paste करें..." />
+                        <button id="paste-btn" class="btn btn--secondary paste-btn">Paste</button>
+                        <button id="download-btn" class="btn btn--primary download-btn">Download</button>
+                    </div>
+                </section>
+
+                <!-- Popular Platforms -->
+                <section class="platforms-section">
+                    <h3>Popular Platforms</h3>
+                    <div class="platforms-grid" id="platforms-grid">
+                        <!-- Platforms will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Video Info Section -->
+                <section id="video-info-section" class="video-info-section hidden">
+                    <div class="video-info-card">
+                        <div class="video-thumbnail">
+                            <img id="video-thumbnail" src="" alt="Video Thumbnail">
+                            <div class="duration-badge" id="video-duration"></div>
+                        </div>
+                        <div class="video-details">
+                            <h4 id="video-title"></h4>
+                            <p id="video-channel"></p>
+                            <p id="video-views"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Options -->
+                    <div class="quality-options">
+                        <h4>Download Quality चुनें:</h4>
+                        <div class="quality-grid" id="quality-grid">
+                            <!-- Quality options will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Download Progress -->
+                <section id="download-progress-section" class="download-progress-section hidden">
+                    <div class="progress-card">
+                        <h4>Downloading...</h4>
+                        <div class="progress-info">
+                            <span id="download-filename"></span>
+                            <span id="download-size"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-controls">
+                            <button id="pause-btn" class="btn btn--outline">Pause</button>
+                            <button id="cancel-btn" class="btn btn--outline">Cancel</button>
+                        </div>
+                        <div class="download-stats">
+                            <span id="download-speed">Speed: 0 KB/s</span>
+                            <span id="download-progress">0%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Downloads Preview -->
+                <section class="recent-downloads">
+                    <div class="section-header">
+                        <h3>Recent Downloads</h3>
+                        <button class="btn btn--outline" onclick="switchTab('downloads')">View All</button>
+                    </div>
+                    <div class="downloads-preview" id="downloads-preview">
+                        <!-- Recent downloads will be shown here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Downloads Tab -->
+            <div id="downloads-tab" class="tab-content">
+                <div class="downloads-header">
+                    <h3>My Downloads</h3>
+                    <div class="downloads-controls">
+                        <input type="text" class="form-control search-input" placeholder="Search downloads..." id="search-downloads">
+                        <select class="form-control sort-select" id="sort-downloads">
+                            <option value="date">Sort by Date</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="size">Sort by Size</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="downloads-grid" id="downloads-grid">
+                    <!-- Downloaded videos will be shown here -->
+                </div>
+                <div id="no-downloads" class="no-downloads hidden">
+                    <div class="empty-state">
+                        <h4>कोई downloads नहीं हैं</h4>
+                        <p>Video download करने के लिए URL paste करें</p>
+                        <button class="btn btn--primary" onclick="switchTab('home')">Start Downloading</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="settings-section">
+                    <h3>Settings</h3>
+                    <div class="settings-group">
+                        <h4>Download Settings</h4>
+                        <div class="setting-item">
+                            <label class="form-label">Default Quality</label>
+                            <select class="form-control" id="default-quality">
+                                <option value="720p">720p HD</option>
+                                <option value="1080p">1080p Full HD</option>
+                                <option value="480p">480p</option>
+                                <option value="360p">360p</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label class="form-label">
+                                <input type="checkbox" id="auto-download" checked> Auto-start downloads
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="form-label">
+                                <input type="checkbox" id="save-to-gallery" checked> Save to gallery
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4>App Settings</h4>
+                        <div class="setting-item">
+                            <label class="form-label">
+                                <input type="checkbox" id="show-ads" checked> Show advertisements
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="form-label">
+                                <input type="checkbox" id="notifications"> Enable notifications
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h4>About VidDown</h4>
+                        <p>Version 1.0.0</p>
+                        <p>The best video downloader for all platforms</p>
+                        <button class="btn btn--outline">Contact Support</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Tab -->
+            <div id="premium-tab" class="tab-content">
+                <div class="premium-section">
+                    <div class="premium-header">
+                        <h2>🎯 VidDown Premium</h2>
+                        <p>Unlock all features और ad-free experience</p>
+                    </div>
+                    <div class="premium-features">
+                        <div class="feature-grid" id="premium-features-grid">
+                            <!-- Premium features will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="premium-pricing">
+                        <div class="price-card">
+                            <h3>Monthly</h3>
+                            <div class="price">₹99/month</div>
+                            <button class="btn btn--primary upgrade-btn">Upgrade Now</button>
+                        </div>
+                        <div class="price-card featured">
+                            <h3>Yearly</h3>
+                            <div class="price">₹599/year</div>
+                            <div class="discount">50% Save!</div>
+                            <button class="btn btn--primary upgrade-btn">Best Value</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Player Modal -->
+    <div id="video-player-modal" class="modal hidden">
+        <div class="modal-content video-player-content">
+            <div class="player-header">
+                <h4 id="player-title">Video Title</h4>
+                <button class="close-btn" onclick="closeVideoPlayer()">×</button>
+            </div>
+            <div class="video-player-container">
+                <video id="video-player" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="player-controls">
+                <button class="btn btn--outline" onclick="toggleFullscreen()">Fullscreen</button>
+                <select class="form-control quality-selector" id="quality-selector">
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interstitial Ad Modal -->
+    <div id="interstitial-ad-modal" class="modal hidden">
+        <div class="modal-content ad-modal-content">
+            <div class="ad-header">
+                <span>Advertisement</span>
+                <button class="close-btn" onclick="closeInterstitialAd()" disabled id="ad-close-btn">×</button>
+            </div>
+            <div class="ad-content-area">
+                <div class="ad-video-placeholder">
+                    <h3>🎬 Premium Video Downloader</h3>
+                    <p>Download videos 10x faster with Premium!</p>
+                    <div class="ad-timer">Ad ends in <span id="ad-timer">5</span>s</div>
+                </div>
+            </div>
+            <div class="ad-actions">
+                <button class="btn btn--primary" onclick="upgradeFromAd()">Upgrade to Premium</button>
+                <button class="btn btn--outline" onclick="skipAd()">Skip Ad</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Ad Banner -->
+    <div class="ad-banner bottom-ad">
+        <div class="ad-content">
+            <span class="ad-text">Download Faster with VidDown Pro!</span>
+            <button class="ad-close" onclick="closeAd(this)">×</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Processing video URL...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
